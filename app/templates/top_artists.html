@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="text-center my-container">
+    <div class="pills-tab">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-short-term-tab" data-bs-toggle="pill" data-bs-target="#pills-short-term" type="button" role="tab" aria-controls="pills-short-term" aria-selected="true">Last 4 Weeks</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-medium-term-tab" data-bs-toggle="pill" data-bs-target="#pills-medium-term" type="button" role="tab" aria-controls="pills-medium-term" aria-selected="false">Last 6 Months</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-long-term-tab" data-bs-toggle="pill" data-bs-target="#pills-long-term" type="button" role="tab" aria-controls="pills-long-term" aria-selected="false">All Time</button>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-short-term" role="tabpanel" aria-labelledby="pills-short-term-tab" tabindex="0">
+            <section>
+                <h3>Your Top 10 Most Played Artists</h3>
+                <div class="stats">
+                    {% for item in short_term.values %}
+                        {% for artist in item %}
+                            <div class="item" >
+                                <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
+                                <a href="{{ artist.ext_url }}" class=""><b>{{ artist.name }} </b><br></a>
+                                <span class="fw-bold">{{ artist.monthly_listeners }} monthly listeners</span>
+                                <h3 class="mt-2">{{ artist.idx }}</h3>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        <div class="tab-pane fade" id="pills-medium-term" role="tabpanel" aria-labelledby="pills-medium-term-tab" tabindex="0">
+            <section>
+                <h3>Your Top 10 Most Played Artists</h3>
+                <div class="stats">
+                    {% for item in medium_term.values %}
+                        {% for artist in item %}
+                            <div class="item" >
+                                <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
+                                <a href="{{ artist.ext_url }}" class=""><b>{{ artist.name }} </b><br></a>
+                                <span class="fw-bold">{{ artist.monthly_listeners }} monthly listeners</span>
+                                <h3 class="mt-2">{{ artist.idx }}</h3>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+        <div class="tab-pane fade" id="pills-long-term" role="tabpanel" aria-labelledby="pills-long-term-tab" tabindex="0">
+            <section>
+                <h3>Your Top 10 Most Played Artists</h3>
+                <div class="stats">
+                    {% for item in long_term.values %}
+                        {% for artist in item %}
+                            <div class="item" >
+                                <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
+                                <a href="{{ artist.ext_url }}" class=""><b>{{ artist.name }} </b><br></a>
+                                <span class="fw-bold">{{ artist.monthly_listeners }} monthly listeners</span>
+                                <h3 class="mt-2">{{ artist.idx }}</h3>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

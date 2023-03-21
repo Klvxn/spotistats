@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="/static/favicon_io/site.webmanifest">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <title>Your Spotify Stats</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <span class="navbar-brand fw-bold">Spotistats</span> &ThickSpace; &ThickSpace;
+        </div>
+    </nav>
+    {% block content %}
+    <div class="content mb-5">
+        <h3 class="my-4 mx-0 f-style fw-bold">Your Spotify Stats</h3>
+
+        <div class="py-3">
+            <h4 class="f-style">Explore your personal listening stats and see your tracks, artists ranking.</h4>
+        </div>
+
+        <div class="my-4">
+            <div class="flex">
+                <img src="/static/favorite-music.png"  alt="">
+                <div>
+                    <p class="f-style"> <b>Your Favourites</b> <br> View your favourite and top 10 most listened tracks amd artists over a specific period of time.</p>
+                </div>
+            </div>
+            <div class="flex">  
+                <img src="/static/history.png" class="" alt="">
+                <div>
+                    <p class="f-style"> <b>Recently played</b><br> Glance through your listening history. Your last 20 recently played tracks with timestamps. </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-3 form">
+            <form action="" method="post">
+                {% csrf_token %}
+                <button class="sp-login" type="submit">Login with Spotify</button>
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

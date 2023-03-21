@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300&display=swap');
+
+h3, h4, h5 {
+  font-family: 'Playfair Display', serif;
+}
+
+:root {
+  --my-black: #191414;
+ --my-green:  #1ED760;
+}
+ 
+nav {
+  color: var(--my-black);
+  background-color: var(--my-green);
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+* {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.f-style {
+  font-family: 'Fira Sans', sans-serif;
+}
+
+.flex div {
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.sp-login {
+  background-color: var(--my-green);
+  padding: .5rem 2rem;
+  color: white;
+  border-radius: .3rem;
+  width: fit-content;
+  border: none;
+  margin: 1rem 0 ;
+}
+
+.content {
+  margin: 0 auto;
+  width: 80%;
+}
+
+@media only screen and  (min-width: 641px) {
+  .stats {
+    display: flex;
+    flex-flow: row  wrap;
+    justify-content: center;
+  }
+
+  .item {
+    width: 28%;
+    padding-top: 1rem;
+    border-bottom: 0px !important;
+    margin: 0 .75rem;
+  }
+  
+  .my-container {
+    margin: 0 2rem;
+  }
+
+  .flex div {
+    margin-left: 2.5rem;
+    font-size: 1.25rem;
+  }
+
+  .content {
+    margin: 0 auto;
+    width: 60%;
+  }
+
+}
+
+.flex {
+  display: flex;
+  margin: 2rem 0;
+}
+
+.flex img {
+  height: 6.5rem ;
+  width: 5.5rem ;
+}
+
+.sp-login:hover {
+  text-decoration: none;
+  outline: 1px var(--my-black) solid;
+  outline-offset: .15rem;
+}
+
+.item {
+  border-bottom: 1px lightgray solid;
+  margin-top: 1rem;
+}
+
+h3 {
+  margin: 3rem 0 !important;
+}
+
+.pills-tab {
+  width: max-content;
+  margin: 2rem auto;
+}
+
+
+#pills-tab button {
+  color: var(--my-black);
+}
+
+#pills-tab button.active {
+  background-color: var(--my-green) !important;
+  color: white; 
+}
+
+.form, form {
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}

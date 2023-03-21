@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="text-center my-container">
+    <section id="recently-played" class="mb-5">
+        <h3>Your Recently Played Tracks</h3>
+        <div class="stats">
+            {% for track in recently_played %}
+                <div class="item d-flex px-1">
+                    <h5 class="ms-2">{{ track.idx }}</h5>
+                    <img src="{{ track.image_url }}" alt=""class="mx-2" width="64" height="64">
+                    <div class="text-start px-2">
+                        <span class="fw-bold">{{ track.name }} </span><br>
+                        <span>{{ track.artist }}</span> <br>
+                        <span class="sm text-secondary">{{ track.played_at }} </span><br>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}
