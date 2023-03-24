@@ -12,12 +12,15 @@ auth = tk.UserAuth(cred, tk.scope.every)
 
 
 def current_user(request):
-    refresh_token = request.session["refresh_token"]
-    tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
-    sp = tk.Spotify(tkn)
-    response = sp.current_user()
-    user = {
-        "name": response.display_name,
-        "image_url": response.images[0].url,
-    }
-    return user
+    try:
+        refresh_token = request.session["refresh_token"]
+        tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
+        sp = tk.Spotify(tkn)
+        response = sp.current_user()
+        user = {
+            "user_name": response.display_name,
+            "user_image_url": response.images[0].url,
+        }
+        return user
+    except:
+        return {}

@@ -22,7 +22,7 @@
                 <h3>Your Top 10 Most Played Artists</h3>
                 <div class="stats">
                     {% for item in short_term.values %}
-                        {% for artist in item %}
+                        {% for artist in item reversed %}
                             <div class="item" >
                                 <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
                                 <a href="{{ artist.ext_url }}" class=""><b>{{ artist.name }} </b><br></a>
@@ -39,7 +39,7 @@
                 <h3>Your Top 10 Most Played Artists</h3>
                 <div class="stats">
                     {% for item in medium_term.values %}
-                        {% for artist in item %}
+                        {% for artist in item reversed %}
                             <div class="item" >
                                 <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
                                 <a href="{{ artist.ext_url }}" class=""><b>{{ artist.name }} </b><br></a>
@@ -56,7 +56,7 @@
                 <h3>Your Top 10 Most Played Artists</h3>
                 <div class="stats">
                     {% for item in long_term.values %}
-                        {% for artist in item %}
+                        {% for artist in item reversed %}
                             <div class="item" >
                                 <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
                                 <a href="{{ artist.ext_url }}" class=""><b>{{ artist.name }} </b><br></a>

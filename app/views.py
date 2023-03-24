@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from app.models import Artist
+from .models import Artist
 
 
 client_id = settings.SPOTIFY_CLIENT_ID
@@ -21,15 +21,18 @@ auth = tk.UserAuth(cred, tk.scope.every)
 
 # Create your views here.
 def index(request):
+
     if request.method == "POST":
         auth_url = auth.url
         request.session["auth_state"] = auth.state
         return redirect(auth_url)
+
     return render(request, "spotify_login.html")
 
 
 def callback(request):
     auth_state = request.session.pop("auth_state", None)
+
     if not auth_state or auth_state != request.GET.get("state"):
         return redirect("/")
 
@@ -45,6 +48,10 @@ def callback(request):
 
 async def home(request):
     refresh_token = await sync_to_async(request.session.get)("refresh_token")
+
+    if refresh_token is None:
+        return redirect("/")
+
     tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
     sp = tk.Spotify(tkn, asynchronous=True)
 
@@ -78,6 +85,10 @@ async def home(request):
 
 async def top_artists(request):
     refresh_token = await sync_to_async(request.session.get)("refresh_token")
+
+    if refresh_token is None:
+        return redirect("/")
+
     tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
     sp = tk.Spotify(tkn, asynchronous=True)
 
@@ -88,7 +99,7 @@ async def top_artists(request):
     for range in sp_range:
         top_artists_response = await sp.current_user_top_artists(limit=10, time_range=range)
         _artists = []
-        await scrape_artist_monthly_listeners(top_artists_response.items)
+        await scrape_artists_monthly_listeners(top_artists_response.items)
 
         for idx, item in enumerate(top_artists_response.items, start=1):
             artist = await artists.filter(artist_id=item.id).afirst()
@@ -112,13 +123,15 @@ async def top_artists(request):
     return render(request, "top_artists.html", context=context)
 
 
-async def scrape_artist_monthly_listeners(artists):
+async def scrape_artists_monthly_listeners(artists):
     async with httpx.AsyncClient() as client:
+
         for artist in artists:
             response = await client.get(f"https://open.spotify.com/artist/{artist.id}")
             data = bs4.BeautifulSoup(response.content, "html.parser")
             content = data.find_all("meta")[5].get("content")
             value = content.split()[-3]
+
             try:
                 await Artist.objects.acreate(
                     artist_id=artist.id,
@@ -127,15 +140,21 @@ async def scrape_artist_monthly_listeners(artists):
                 )
             except IntegrityError:
                 pass
+
     return
 
 
 async def recently_played(request):
     refresh_token = await sync_to_async(request.session.get)("refresh_token")
+
+    if refresh_token is None:
+        return redirect("/")
+
     tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
     sp = tk.Spotify(tkn, asynchronous=True)
     response = await sp.playback_recently_played(limit=20)
     recent_tracks = []
+
     for idx, item in enumerate(response.items, start=1):
         track_s = {
             "idx": idx,
@@ -145,5 +164,6 @@ async def recently_played(request):
             "artist": item.track.artists[0].name,
         }
         recent_tracks.append(track_s)
+
     context = {"recently_played": recent_tracks}
     return render(request, "recent_tracks.html", context)

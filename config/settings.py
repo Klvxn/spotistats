@@ -30,7 +30,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ["IN_DEBUG_MODE"]
 
-ALLOWED_HOSTS = os.environ["MY_HOSTS"].split()
+ALLOWED_HOSTS = os.environ["MY_HOSTS"].split(",")
 
 
 # Application definition
@@ -134,4 +134,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SPOTIFY_CLIENT_ID = os.environ["SPOTIFY_CLIENT_ID"]
 SPOTIFY_CLIENT_SECRET = os.environ["SPOTIFY_CLIENT_SECRET"]
 REDIRECT_URI = os.environ["REDIRECT_URI"]
-
