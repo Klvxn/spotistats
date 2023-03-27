@@ -1,7 +1,6 @@
-import bs4, httpx
+import bs4, requests
 import tekore as tk
-
-from asgiref.sync import sync_to_async
+from time import time
 from django.conf import settings
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
@@ -46,21 +45,22 @@ def callback(request):
     return redirect(reverse("app:home"))
 
 
-async def home(request):
-    refresh_token = await sync_to_async(request.session.get)("refresh_token")
+def home(request):
+    start = time()
+    refresh_token = request.session.get("refresh_token")
 
     if refresh_token is None:
         return redirect("/")
 
     tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
-    sp = tk.Spotify(tkn, asynchronous=True)
+    sp = tk.Spotify(tkn)
 
     top_tracks = []
     sp_range = ["short_term", "medium_term", "long_term"]
 
     for range in sp_range:
         tracks = []
-        top_tracks_response = await sp.current_user_top_tracks(limit=10, time_range=range)
+        top_tracks_response = sp.current_user_top_tracks(limit=10, time_range=range)
 
         for idx, item in enumerate(top_tracks_response.items, start=1):
             track_info = {
@@ -80,29 +80,32 @@ async def home(request):
         "medium_term": top_tracks[1],
         "long_term": top_tracks[2],
     }
+    end = time()
+    print(end-start)
     return render(request, "base.html", context)
 
 
-async def top_artists(request):
-    refresh_token = await sync_to_async(request.session.get)("refresh_token")
+def top_artists(request):
+    start = time()
+    refresh_token = request.session.get("refresh_token")
 
     if refresh_token is None:
         return redirect("/")
 
     tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
-    sp = tk.Spotify(tkn, asynchronous=True)
+    sp = tk.Spotify(tkn)
 
     top_artists = []
     sp_range = ["short_term", "medium_term", "long_term"]
     artists = Artist.objects.all()
 
     for range in sp_range:
-        top_artists_response = await sp.current_user_top_artists(limit=10, time_range=range)
+        top_artists_response = sp.current_user_top_artists(limit=10, time_range=range)
         _artists = []
-        await scrape_artists_monthly_listeners(top_artists_response.items)
+        scrape_artists_monthly_listeners(top_artists_response.items)
 
         for idx, item in enumerate(top_artists_response.items, start=1):
-            artist = await artists.filter(artist_id=item.id).afirst()
+            artist = artists.filter(artist_id=item.id).first()
             artist_info = {
                 "idx": idx,
                 "name": item.name,
@@ -120,50 +123,49 @@ async def top_artists(request):
         "medium_term": top_artists[1],
         "long_term": top_artists[2],
     }
+    end = time()
+    print(end - start)
     return render(request, "top_artists.html", context=context)
 
 
-async def scrape_artists_monthly_listeners(artists):
-    async with httpx.AsyncClient() as client:
+def scrape_artists_monthly_listeners(artists):
+    for artist in artists:
+        response = requests.get(f"https://open.spotify.com/artist/{artist.id}")
+        data = bs4.BeautifulSoup(response.content, "html.parser")
+        content = data.find_all("meta")[5].get("content")
+        value = content.split()[-3]
 
-        for artist in artists:
-            response = await client.get(f"https://open.spotify.com/artist/{artist.id}")
-            data = bs4.BeautifulSoup(response.content, "html.parser")
-            content = data.find_all("meta")[5].get("content")
-            value = content.split()[-3]
-
-            try:
-                await Artist.objects.acreate(
-                    artist_id=artist.id,
-                    monthly_listeners=value,
-                    stage_name=artist.name
-                )
-            except IntegrityError:
-                pass
-
+        try:
+            Artist.objects.create(
+                artist_id=artist.id,
+                monthly_listeners=value,
+                stage_name=artist.name
+            )
+        except IntegrityError:
+            pass
     return
 
 
-async def recently_played(request):
-    refresh_token = await sync_to_async(request.session.get)("refresh_token")
+def recently_played(request):
+    refresh_token = request.session.get("refresh_token")
 
     if refresh_token is None:
         return redirect("/")
 
     tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
-    sp = tk.Spotify(tkn, asynchronous=True)
-    response = await sp.playback_recently_played(limit=20)
+    sp = tk.Spotify(tkn)
+    response = sp.playback_recently_played(limit=20)
     recent_tracks = []
 
     for idx, item in enumerate(response.items, start=1):
-        track_s = {
+        track = {
             "idx": idx,
             "name": item.track.name,
             "played_at": item.played_at.ctime,
             "image_url": item.track.album.images[1].url,
             "artist": item.track.artists[0].name,
         }
-        recent_tracks.append(track_s)
+        recent_tracks.append(track)
 
     context = {"recently_played": recent_tracks}
     return render(request, "recent_tracks.html", context)

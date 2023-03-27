@@ -26,8 +26,11 @@
                     <li class="nav-item"><a class="nav-link" href="/stats/recently-played">Recently Played</a></li>
                 </ul>
                 <ul class="navbar-nav me-3 mb-lg-0 fw-medium">
-                    <li class="nav-item"><a class="nav-link fw-semibold ">Hello {{ user_name }}</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold">Hello {{ user_name }}</a></li>
                     <li class="nav-item"><img src="{{ user_image_url }}" alt=" " class="rounded" width="40" height="40"></li>
+                    <form action="" method="post">
+                        <li class="nav-item"><button type="submit" class="nav-link fw-semibold">Log out</button></li>
+                    </form>
                 </ul>
             </div>
         </div>
