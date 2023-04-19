@@ -3,9 +3,9 @@
 {% block content %}
 <div class="text-center my-container">
     <div class="btn-group mb-3 nav-stacked pills-tab" role="group">
-        <button type="button" class="btn btn-outline-success" hx-get="{% url 'app:long_term' "short_term" %}" hx-target="#midterm" hx-swap="innerHTML">Last 4 Weeks</button>
-        <button type="button" class="btn btn-outline-secondary" hx-get="{% url 'app:long_term' "medium_term" %}" hx-target="#midterm" hx-swap="innerHTML">Last 6 Months</button>
-        <button type="button" class="btn btn-outline-info" hx-get="{% url 'app:long_term' "long_term" %}" hx-target="#midterm" hx-swap="innerHTML">All Time</button>
+        <button type="button" class="btn btn-outline-success" hx-get="{% url 'app:artists_term' "short_term" %}" hx-target="#midterm" hx-swap="innerHTML">Last 4 Weeks</button>
+        <button type="button" class="btn btn-outline-secondary" hx-get="{% url 'app:artists_term' "medium_term" %}" hx-target="#midterm" hx-swap="innerHTML">Last 6 Months</button>
+        <button type="button" class="btn btn-outline-info" hx-get="{% url 'app:artists_term' "long_term" %}" hx-target="#midterm" hx-swap="innerHTML">All Time</button>
     </div>
     <div>
         <h3 class="mb-1">Your Top 10 Most Played Artists</h3>
