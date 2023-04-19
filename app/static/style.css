@@ -48,34 +48,48 @@ nav {
   width: 80%;
 }
 
-@media only screen and  (min-width: 641px) {
-  .stats {
+.stats {
     display: flex;
     flex-flow: row  wrap;
     justify-content: center;
-  }
+}
 
-  .item {
+.item {
     width: 28%;
     padding-top: 1rem;
     border-bottom: 0px !important;
     margin: 0 .75rem;
-  }
-  
+}
+
+.my-container {
+  margin: 0 2rem;
+}
+
+.flex div {
+  margin-left: 2.5rem;
+  font-size: 1.25rem;
+}
+
+.content {
+  margin: 0 auto;
+  width: 50%;
+}
+
+@media only screen and  (max-width: 641px) {
+
   .my-container {
-    margin: 0 2rem;
+    margin: 0 .5rem;
   }
 
-  .flex div {
-    margin-left: 2.5rem;
-    font-size: 1.25rem;
+  .item {
+    font-size: medium;
+    width: 100%;
   }
 
   .content {
     margin: 0 auto;
-    width: 60%;
+    width: 90%;
   }
-
 }
 
 .flex {
@@ -109,17 +123,15 @@ h3 {
 }
 
 
-#pills-tab button {
+.pills-tab button {
   color: var(--my-black);
 }
 
-#pills-tab button.active {
+.pills-tab button.active {
   background-color: var(--my-green) !important;
   color: white; 
 }
 
-.form, form {
-  margin: 0 auto;
-  width: 100%;
-  text-align: center;
+.pills-tab button:active {
+  border: 1px blue solid;
 }

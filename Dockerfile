@@ -1,16 +1,18 @@
-FROM python:3.11.2-alpine
+FROM python:3.10.4-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /usr/src/myapp
+WORKDIR /src
 
-COPY requirements.txt ./
+COPY requirements.txt /src
 
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
 
-COPY . .
+COPY . /src
 
-EXPOSE 8000
+RUN python3 manage.py migrate
 
-CMD ["python manage.py runserver"]
+EXPOSE 8000 8000
+
+CMD ["gunicorn", "config.wsgi:application", "-b 0.0.0.0:8000"]

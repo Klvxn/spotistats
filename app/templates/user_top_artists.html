@@ -1,0 +1,12 @@
+<section>
+    <h4 class="mb-4">({{ term|title }})</h4>
+    <div class="stats">
+        {% for artist in items reversed %}
+            <div class="item" >
+                <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
+                <a href="{{ artist.external_url.spotify }}" class=""><b>{{ artist.name }} </b><br></a>
+                <h3 class="mt-2">{{ artist.idx }}</h3>
+            </div>
+        {% endfor %}
+    </div>
+</section>
