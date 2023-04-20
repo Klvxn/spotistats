@@ -12,7 +12,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
 COPY . /src
 
 RUN python3 manage.py migrate
+RUN python3 manage.py collectstatic --noinput
 
-EXPOSE 8000 8000
+EXPOSE 8000
 
 CMD ["gunicorn", "config.wsgi:application", "-b 0.0.0.0:8000"]

@@ -1,3 +1,4 @@
+import bs4, requests
 import tekore as tk
 
 from django.conf import settings
@@ -25,7 +26,7 @@ def top_tracks(request, term):
             "idx": idx,
             "name": item.name,
             "image_url": item.album.images[1].url,
-            "external_url": item.external_urls,
+            "ext_url": item.external_urls,
             "primary_artist": item.artists[0].name,
         }
         top_track.append(track)
@@ -56,6 +57,7 @@ def top_artists(request, term):
             "name": item.name,
             "image_url": item.images[0].url,
             "external_url": item.external_urls,
+            "monthly_listeners": retrieve_artists_monthly_listeners(item.id)
         }
         top_artist.append(artist)
 
@@ -66,3 +68,11 @@ def top_artists(request, term):
     }
 
     return top_artist, range[term]
+
+
+def retrieve_artists_monthly_listeners(artist_id):
+    response = requests.get(f"https://open.spotify.com/artist/{artist_id}")
+    data = bs4.BeautifulSoup(response.content, "html.parser")
+    content = data.find_all("meta")[5].get("content")
+    value = content.split()[-3]
+    return value

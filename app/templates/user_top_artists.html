@@ -4,7 +4,8 @@
         {% for artist in items reversed %}
             <div class="item" >
                 <img src="{{ artist.image_url }}" alt="" class="shadow mb-3" width="165" height="165"> <br>
-                <a href="{{ artist.external_url.spotify }}" class=""><b>{{ artist.name }} </b><br></a>
+                <a href="{{ artist.external_url.spotify }}"><b>{{ artist.name }}</b></a><br>
+                <span>{{ artist.monthly_listeners }} monthly listeners</span>
                 <h3 class="mt-2">{{ artist.idx }}</h3>
             </div>
         {% endfor %}

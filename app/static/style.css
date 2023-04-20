@@ -38,7 +38,7 @@ nav {
   padding: .5rem 2rem;
   color: white;
   border-radius: .3rem;
-  width: fit-content;
+  width: 60%;
   border: none;
   margin: 1rem 0 ;
 }
@@ -100,6 +100,27 @@ nav {
 .flex img {
   height: 6.5rem ;
   width: 5.5rem ;
+}
+
+.form {
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+
+.form div {
+  margin-bottom: 1rem;
+}
+
+.form input {
+  border: 1px var(--my-green) solid;
+  border-radius: .3rem;
+  padding: 0 .5rem;
+  height: 2.5rem;
+}
+
+.form input:focus {
+  outline: None;
 }
 
 .sp-login:hover {
