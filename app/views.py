@@ -1,20 +1,9 @@
-import tekore as tk
-from django.conf import settings
-
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http.response import HttpResponse
 from django.template.loader import render_to_string
 
-from .util import top_artists, top_tracks
-
-client_id = settings.SPOTIFY_CLIENT_ID
-client_secret = settings.SPOTIFY_CLIENT_SECRET
-redirect_uri = settings.REDIRECT_URI
-conf = (client_id, client_secret, redirect_uri)
-
-cred = tk.Credentials(*conf)
-auth = tk.UserAuth(cred, tk.scope.every)
+from .util import auth, top_artists, top_tracks, recently_played
 
 
 # Create your views here.
@@ -43,7 +32,7 @@ def callback(request):
     return redirect(reverse("app:home"))
 
 
-def home(request):
+def user_top_tracks(request):
     tracks, range = top_tracks(request, "short_term")
     context = {"items": tracks, "term": range}
     return render(request, "base.html", context)
@@ -63,32 +52,13 @@ def artists_by_term(request, term):
     return HttpResponse(response)
 
 
-def artists(request):
+def user_top_artists(request):
     artist, range = top_artists(request, "short_term")
     context = {"items": artist, "term": range}
     return render(request, "top_artists.html", context=context)
 
 
-def recently_played(request):
-    refresh_token = request.session.get("refresh_token")
-
-    if refresh_token is None:
-        return redirect("/")
-
-    tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
-    sp = tk.Spotify(tkn)
-    response = sp.playback_recently_played(limit=20)
-    recent_tracks = []
-
-    for idx, item in enumerate(response.items, start=1):
-        track = {
-            "idx": idx,
-            "name": item.track.name,
-            "played_at": item.played_at.ctime,
-            "image_url": item.track.album.images[1].url,
-            "artist": item.track.artists[0].name,
-        }
-        recent_tracks.append(track)
-
+def user_recently_played(request):
+    recent_tracks = recently_played(request)
     context = {"recently_played": recent_tracks}
     return render(request, "recent_tracks.html", context)

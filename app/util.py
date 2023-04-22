@@ -1,24 +1,37 @@
 import bs4, requests
 import tekore as tk
 
-from django.conf import settings
 from django.shortcuts import redirect
+from django.conf import settings
+
 
 client_id = settings.SPOTIFY_CLIENT_ID
 client_secret = settings.SPOTIFY_CLIENT_SECRET
 redirect_uri = settings.REDIRECT_URI
 conf = (client_id, client_secret, redirect_uri)
+scope = "user-top-read user-read-recently-played"
+cred = tk.Credentials(*conf)
+auth = tk.UserAuth(cred, scope)
+
+
+def is_valid_token(token):
+    try:
+        tk.Spotify(token).current_user()
+        return token
+    except tk.Unauthorised:
+        return cred.refresh(token)
 
 
 def top_tracks(request, term):
-    refresh_token = request.session.get("refresh_token")
+    access_token = request.session.get("access_token")
 
-    if refresh_token is None:
+    if access_token is None:
         return redirect("/")
 
     top_track = []
-    tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
-    sp = tk.Spotify(tkn)
+
+    token = is_valid_token(access_token)
+    sp = tk.Spotify(token)
     sp_response = sp.current_user_top_tracks(limit=10, time_range=term)
 
     for idx, item in enumerate(sp_response.items, start=1):
@@ -41,14 +54,14 @@ def top_tracks(request, term):
 
 
 def top_artists(request, term):
-    refresh_token = request.session.get("refresh_token")
+    access_token = request.session.get("access_token")
 
-    if refresh_token is None:
+    if access_token is None:
         return redirect("/")
 
     top_artist = []
-    tkn = tk.refresh_user_token(client_id, client_secret, refresh_token)
-    sp = tk.Spotify(tkn)
+    token = is_valid_token(access_token)
+    sp = tk.Spotify(token)
     sp_response = sp.current_user_top_artists(limit=10, time_range=term)
 
     for idx, item in enumerate(sp_response.items, start=1):
@@ -76,3 +89,27 @@ def retrieve_artists_monthly_listeners(artist_id):
     content = data.find_all("meta")[5].get("content")
     value = content.split()[-3]
     return value
+
+
+def recently_played(request):
+    access_token = request.session.get("access_token")
+
+    if access_token is None:
+        return redirect("/")
+
+    token = is_valid_token(access_token)
+    sp = tk.Spotify(token)
+    response = sp.playback_recently_played(limit=20)
+    recent_tracks = []
+
+    for idx, item in enumerate(response.items, start=1):
+        track = {
+            "idx": idx,
+            "name": item.track.name,
+            "played_at": item.played_at.ctime,
+            "image_url": item.track.album.images[1].url,
+            "artist": item.track.artists[0].name,
+        }
+        recent_tracks.append(track)
+
+    return recent_tracks
